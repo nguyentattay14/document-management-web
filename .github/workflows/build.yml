@@ -5,6 +5,7 @@ on:
     branches: [ main, "feature-*" ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch: # Thêm dòng này để có thể chạy thủ công
 
 jobs:
   build:
