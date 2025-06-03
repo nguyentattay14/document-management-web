@@ -19,3 +19,9 @@ jobs:
         distribution: 'temurin'
     - name: Build with Maven
       run: mvn clean package
+      
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: java-build
+        path: target/*.war  # Hoặc đổi thành target/*.jar
