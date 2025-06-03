@@ -24,4 +24,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: java-build
-        path: target/*.war  # Hoặc đổi thành target/*.jar
+        path: |
+            target/*.jar
+            target/*.war
+
