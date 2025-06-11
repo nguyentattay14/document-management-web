@@ -34,7 +34,7 @@ public class HelloServletTest {
         // Kiểm tra nội dung đầu ra
         writer.flush(); // Đảm bảo nội dung được ghi
         String output = stringWriter.toString();
-        assertTrue(output.contains("<h1>Hello, World, I am a servlet, Ngô Hoàng Huy!</h1>"),
+        assertTrue(output.contains("<h1>Hello, World</h1>"),
                 "Nội dung đầu ra không chứa chuỗi dự kiến");
     }
 }
