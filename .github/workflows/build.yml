@@ -1,6 +1,6 @@
 name: Java CI/CD with Maven - Build and Deploy WAR
 
-on:
+on:   
   push:
     branches: [ main, feature-hello ]
     paths:
