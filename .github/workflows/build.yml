@@ -41,17 +41,17 @@ jobs:
         if (Test-Path "D:\Tomcat10\bin\shutdown.bat") { & "D:\Tomcat10\bin\shutdown.bat" }
         Start-Sleep -Seconds 5
         Get-Process -Name "java" -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "*D:\Tomcat*" } | Stop-Process -Force
-      shell: powershell
+      shell: powershell -ExecutionPolicy Bypass
     - name: Deploy WAR to Tomcat
       run: |
         Remove-Item -Path "D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war" -Force -ErrorAction SilentlyContinue
         Remove-Item -Path "D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT" -Recurse -Force -ErrorAction SilentlyContinue
         Copy-Item -Path ".\artifacts\java-servlet-web-1.0-SNAPSHOT.war" -Destination "D:\Tomcat10\webapps" -Force
-      shell: powershell
+      shell: powershell -ExecutionPolicy Bypass
     - name: Start Tomcat
       run: |
         Start-Process -FilePath "D:\Tomcat10\bin\startup.bat"
-      shell: powershell
+      shell: powershell -ExecutionPolicy Bypass
     - name: Verify Deployment
       run: |
         Start-Sleep -Seconds 30
@@ -62,4 +62,4 @@ jobs:
           Write-Error "Deployment failed. Check D:\Tomcat10\logs\catalina.out."
           exit 1
         }
-      shell: powershell
+      shell: powershell -ExecutionPolicy Bypass
