@@ -11,6 +11,6 @@ public class HelloServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        out.println("<h1>Hello, World, I am a servlet, 17.06.2025!</h1>");
+        out.println("<h1>Hello, World, I am a servlet, thay đổi 17.06.2025!</h1>");
     }
 }
