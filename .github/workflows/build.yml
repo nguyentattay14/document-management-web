@@ -38,7 +38,7 @@ jobs:
         path: ./artifacts
     - name: Stop Tomcat
       run: |
-        PowerShell -ExecutionPolicy Bypass -Command "if (Test-Connection -ComputerName localhost -TcpPort 8005 -Quiet -TimeoutSeconds 5) { if (Test-Path 'D:\Tomcat10\bin\shutdown.bat') { & 'D:\Tomcat10\bin\shutdown.bat' } } else { Write-Host 'Tomcat not running on port 8005, skipping shutdown.bat' }; Start-Sleep -Seconds 10; Get-Process -Name 'java' -ErrorAction SilentlyContinue | Where-Object { `$_.Path -like '*D:\Tomcat*' } | Stop-Process -Force -ErrorAction SilentlyContinue"
+        PowerShell -ExecutionPolicy Bypass -Command "try { $tcpClient = New-Object System.Net.Sockets.TcpClient; $tcpClient.Connect('localhost', 8005); if ($tcpClient.Connected) { if (Test-Path 'D:\Tomcat10\bin\shutdown.bat') { & 'D:\Tomcat10\bin\shutdown.bat' } } $tcpClient.Close() } catch { Write-Host 'Tomcat not running on port 8005, skipping shutdown.bat' }; Start-Sleep -Seconds 10; Get-Process -Name 'java' -ErrorAction SilentlyContinue | Where-Object { `$_.Path -like '*D:\Tomcat*' } | Stop-Process -Force -ErrorAction SilentlyContinue"
       shell: cmd
     - name: Deploy WAR to Tomcat
       run: |
