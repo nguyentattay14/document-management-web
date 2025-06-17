@@ -38,28 +38,17 @@ jobs:
         path: ./artifacts
     - name: Stop Tomcat
       run: |
-        if (Test-Path "D:\Tomcat10\bin\shutdown.bat") { & "D:\Tomcat10\bin\shutdown.bat" }
-        Start-Sleep -Seconds 5
-        Get-Process -Name "java" -ErrorAction SilentlyContinue | Where-Object { $_.Path -like "*D:\Tomcat*" } | Stop-Process -Force
-      shell: powershell -ExecutionPolicy Bypass
+        PowerShell -ExecutionPolicy Bypass -Command "if (Test-Path 'D:\Tomcat10\bin\shutdown.bat') { & 'D:\Tomcat10\bin\shutdown.bat' }; Start-Sleep -Seconds 5; Get-Process -Name 'java' -ErrorAction SilentlyContinue | Where-Object { `$_.Path -like '*D:\Tomcat*' } | Stop-Process -Force"
+      shell: cmd
     - name: Deploy WAR to Tomcat
       run: |
-        Remove-Item -Path "D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war" -Force -ErrorAction SilentlyContinue
-        Remove-Item -Path "D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT" -Recurse -Force -ErrorAction SilentlyContinue
-        Copy-Item -Path ".\artifacts\java-servlet-web-1.0-SNAPSHOT.war" -Destination "D:\Tomcat10\webapps" -Force
-      shell: powershell -ExecutionPolicy Bypass
+        PowerShell -ExecutionPolicy Bypass -Command "Remove-Item -Path 'D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war' -Force -ErrorAction SilentlyContinue; Remove-Item -Path 'D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT' -Recurse -Force -ErrorAction SilentlyContinue; Copy-Item -Path '.\artifacts\java-servlet-web-1.0-SNAPSHOT.war' -Destination 'D:\Tomcat10\webapps' -Force"
+      shell: cmd
     - name: Start Tomcat
       run: |
-        Start-Process -FilePath "D:\Tomcat10\bin\startup.bat"
-      shell: powershell -ExecutionPolicy Bypass
+        PowerShell -ExecutionPolicy Bypass -Command "Start-Process -FilePath 'D:\Tomcat10\bin\startup.bat'"
+      shell: cmd
     - name: Verify Deployment
       run: |
-        Start-Sleep -Seconds 30
-        $status = Invoke-WebRequest -Uri "http://localhost:8089/java-servlet-web-1.0-SNAPSHOT/hello" -UseBasicParsing -ErrorAction SilentlyContinue
-        if ($status -and $status.Content -like "*Hello, World*") {
-          Write-Host "Deployment successful!"
-        } else {
-          Write-Error "Deployment failed. Check D:\Tomcat10\logs\catalina.out."
-          exit 1
-        }
-      shell: powershell -ExecutionPolicy Bypass
+        PowerShell -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 30; `$status = Invoke-WebRequest -Uri 'http://localhost:8089/java-servlet-web-1.0-SNAPSHOT/hello' -UseBasicParsing -ErrorAction SilentlyContinue; if (`$status -and `$status.Content -like '*Hello, World*') { Write-Host 'Deployment successful!' } else { Write-Error 'Deployment failed. Check D:\Tomcat10\logs\catalina.out.'; exit 1 }}"
+      shell: cmd
