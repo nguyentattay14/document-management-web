@@ -2,7 +2,7 @@ name: Java CI/CD with Maven - Build and Deploy WAR
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, feature-hello ]
     paths:
       - 'src/main/java/com/example/HelloServlet.java'
 
