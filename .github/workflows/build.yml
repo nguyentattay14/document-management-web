@@ -2,13 +2,14 @@ name: Build and Deploy to Tomcat
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -19,7 +20,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
+      - name: Build with Maven (skip tests)
         run: mvn clean package -DskipTests
 
       - name: Upload WAR Artifact
@@ -31,19 +32,20 @@ jobs:
   deploy:
     runs-on: [self-hosted, windows]
     needs: build
+
     steps:
       - name: Download WAR Artifact
         uses: actions/download-artifact@v4
         with:
           name: java-war
           path: ./war
-      
+
       - name: Stop Tomcat
         run: |
           powershell -Command "
             & 'D:\Tomcat10\bin\shutdown.bat';
-            Start-Sleep -Seconds 10;
-            Get-Process java -ErrorAction SilentlyContinue | Where-Object { $_.Path -like '*Tomcat*' } | Stop-Process -Force -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 5;
+            Get-Process java -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
           "
         shell: powershell
 
@@ -53,7 +55,7 @@ jobs:
           if exist D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT rmdir /s /q D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT
         shell: cmd
 
-      - name: Deploy WAR to Tomcat
+      - name: Deploy new WAR to Tomcat
         run: |
           copy .\war\java-servlet-web-1.0-SNAPSHOT.war D:\Tomcat10\webapps\
         shell: cmd
@@ -65,4 +67,16 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          powershell -Command "Start-Sleep -Seconds 30; try { $res = Invoke-WebRequest -Uri 'http://localhost:8089/java-servlet-web-1.0-SNAPSHOT/hello9' -UseBasicParsing; if ($res.StatusCode -eq 200) { Write-Host 'Deployment successful' } else { Write-Error 'Deployment failed' } } catch { Write-Error 'Cannot connect to server' }"
+          powershell -Command "
+            Start-Sleep -Seconds 30;
+            try {
+              $res = Invoke-WebRequest -Uri 'http://localhost:8089/java-servlet-web-1.0-SNAPSHOT/hello9' -UseBasicParsing;
+              if ($res.StatusCode -eq 200) {
+                Write-Host 'Deployment successful'
+              } else {
+                Write-Error 'Deployment failed'
+              }
+            } catch {
+              Write-Error 'Cannot connect to server'
+            }
+          "
