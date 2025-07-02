@@ -40,14 +40,14 @@ jobs:
           name: java-war
           path: ./war
 
-      - name: Stop Tomcat 
+      - name: Stop Tomcat (Safe way)
         run: |
           powershell -Command "
             try {
               Write-Host 'Stopping Tomcat...';
-              Start-Process 'D:\Tomcat10\bin\shutdown.bat' -Wait;
+              Start-Process -FilePath 'D:\Tomcat10\bin\shutdown.bat' -Wait;
               Start-Sleep -Seconds 5;
-              $javaProcesses = Get-Process java -ErrorAction SilentlyContinue;
+              $javaProcesses = Get-Process -Name java -ErrorAction SilentlyContinue;
               if ($javaProcesses) {
                 Write-Host 'Killing Java processes...';
                 $javaProcesses | Stop-Process -Force;
@@ -59,7 +59,6 @@ jobs:
             }
           "
         shell: powershell
-
 
       - name: Remove old WAR and exploded folder
         run: |
