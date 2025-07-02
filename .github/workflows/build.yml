@@ -55,8 +55,9 @@ jobs:
         shell: cmd
 
       - name: Start Tomcat
-        run: Start-Process -FilePath "D:\Tomcat10\bin\startup.bat"
-        shell: powershell
+        run: |
+          start /B cmd /c "D:\Tomcat10\bin\startup.bat"
+        shell: cmd
 
       - name: Verify Deployment
         run: |
