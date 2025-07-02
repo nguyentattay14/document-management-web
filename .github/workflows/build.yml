@@ -37,11 +37,15 @@ jobs:
         with:
           name: java-war
           path: ./war
-
+      
       - name: Stop Tomcat
         run: |
-          powershell D:\Tomcat10\bin\shutdown.bat
-        shell: cmd
+          powershell -Command "
+            & 'D:\Tomcat10\bin\shutdown.bat';
+            Start-Sleep -Seconds 10;
+            Get-Process java -ErrorAction SilentlyContinue | Where-Object { $_.Path -like '*Tomcat*' } | Stop-Process -Force -ErrorAction SilentlyContinue
+          "
+        shell: powershell
 
       - name: Remove old WAR and exploded folder
         run: |
