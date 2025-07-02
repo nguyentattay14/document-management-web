@@ -56,7 +56,7 @@ jobs:
 
       - name: Start Tomcat
         run: |
-          start /B cmd /c "D:\Tomcat10\bin\startup.bat"
+          powershell D:\Tomcat10\bin\startup.bat
         shell: cmd
 
       - name: Verify Deployment
