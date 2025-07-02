@@ -45,10 +45,10 @@ jobs:
 
       - name: Remove old WAR and exploded folder
         run: |
-          del D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war >nul 2>&1
-          rmdir /s /q D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT
+          if exist D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war del D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT.war
+          if exist D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT rmdir /s /q D:\Tomcat10\webapps\java-servlet-web-1.0-SNAPSHOT
         shell: cmd
-
+        
       - name: Deploy WAR to Tomcat
         run: |
           copy .\war\java-servlet-web-1.0-SNAPSHOT.war D:\Tomcat10\webapps\
