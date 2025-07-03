@@ -34,7 +34,7 @@ public class HelloServletTest {
         // Kiểm tra nội dung đầu ra
         writer.flush(); // Đảm bảo nội dung được ghi
         String output = stringWriter.toString();
-        assertTrue(output.contains("<h1>Hello, World, I am a servlet, 10.06.2025!</h1>"),
+        assertTrue(output.contains("<h1>Hello, World, I am a servlet,chú ý nhánh của ---feature hello-19.06.2025!</h1>"),
                 "Nội dung đầu ra không chứa chuỗi dự kiến");
     }
 }
